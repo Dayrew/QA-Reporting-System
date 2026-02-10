@@ -1,0 +1,120 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+}
+
+model ERROR_LOG {
+  id            Int            @id(map: "PK__ERROR_LO__3213E83F1290C4D9") @default(autoincrement())
+  error_type_id Int
+  system_id     Int
+  module_id     Int
+  submodule_id  Int
+  user_id       Int
+  description   String?        @db.NVarChar(255)
+  state         Boolean
+  priority      Int
+  observations  String?        @db.NVarChar(255)
+  timestamp     DateTime?      @default(now(), map: "DF__ERROR_LOG__times__5165187F") @db.DateTime
+  ERROR_TYPE    ERROR_TYPE     @relation(fields: [error_type_id], references: [id], onUpdate: NoAction, map: "FK__ERROR_LOG__error__52593CB8")
+  MODULS        MODULS         @relation(fields: [module_id], references: [id], onUpdate: NoAction, map: "FK__ERROR_LOG__modul__5441852A")
+  SUBMODULES    SUBMODULES     @relation(fields: [submodule_id], references: [id], onUpdate: NoAction, map: "FK__ERROR_LOG__submo__5535A963")
+  SYSTEM        SYSTEM         @relation(fields: [system_id], references: [id], onUpdate: NoAction, map: "FK__ERROR_LOG__syste__534D60F1")
+  USERS         USERS          @relation(fields: [user_id], references: [id], onUpdate: NoAction, map: "FK__ERROR_LOG__user___5629CD9C")
+  REPORT_ERROR  REPORT_ERROR[]
+}
+
+model ERROR_TYPE {
+  id          Int         @id(map: "PK__ERROR_TY__3213E83FFC7C32CF") @default(autoincrement())
+  name        String      @db.VarChar(255)
+  description String?     @db.NVarChar(255)
+  ERROR_LOG   ERROR_LOG[]
+}
+
+model MODULS {
+  id            Int             @id(map: "PK__MODULS__3213E83F6B0BDFDA") @default(autoincrement())
+  name          String          @db.VarChar(255)
+  description   String?         @db.NVarChar(255)
+  ERROR_LOG     ERROR_LOG[]
+  SUBMODULES    SUBMODULES[]
+  SYSTEM_MODULE SYSTEM_MODULE[]
+}
+
+model PERRMISSION {
+  id             Int              @id(map: "PK__PERRMISS__3213E83F645C00A0") @default(autoincrement())
+  name           String           @db.VarChar(255)
+  ROL_PERMISSION ROL_PERMISSION[]
+}
+
+model REPORT {
+  id           Int            @id(map: "PK__REPORT__3213E83FA1386873") @default(autoincrement())
+  name         String         @db.VarChar(255)
+  observations String?        @db.NVarChar(255)
+  timestamp    DateTime?      @default(now(), map: "DF__REPORT__timestam__59063A47") @db.DateTime
+  REPORT_ERROR REPORT_ERROR[]
+}
+
+model REPORT_ERROR {
+  report_id    Int
+  error_log_id Int
+  ERROR_LOG    ERROR_LOG @relation(fields: [error_log_id], references: [id], onUpdate: NoAction, map: "FK__REPORT_ER__error__5CD6CB2B")
+  REPORT       REPORT    @relation(fields: [report_id], references: [id], onUpdate: NoAction, map: "FK__REPORT_ER__repor__5BE2A6F2")
+
+  @@id([report_id, error_log_id], map: "PK__REPORT_E__5AFC82E27E694DCA")
+}
+
+model ROL {
+  id             Int              @id(map: "PK__ROL__3213E83F9437E5E7") @default(autoincrement())
+  name           String           @db.VarChar(255)
+  ROL_PERMISSION ROL_PERMISSION[]
+  USERS          USERS[]
+}
+
+model ROL_PERMISSION {
+  rol_id        Int
+  permission_id Int
+  PERRMISSION   PERRMISSION @relation(fields: [permission_id], references: [id], onUpdate: NoAction, map: "FK__ROL_PERMI__permi__3C69FB99")
+  ROL           ROL         @relation(fields: [rol_id], references: [id], onUpdate: NoAction, map: "FK__ROL_PERMI__rol_i__3B75D760")
+
+  @@id([rol_id, permission_id], map: "PK__ROL_PERM__7161D5EC44D1FACE")
+}
+
+model SUBMODULES {
+  id          Int         @id(map: "PK__SUBMODUL__3213E83FBA907ACD") @default(autoincrement())
+  module_id   Int
+  name        String      @db.VarChar(255)
+  description String?     @db.NVarChar(255)
+  ERROR_LOG   ERROR_LOG[]
+  MODULS      MODULS      @relation(fields: [module_id], references: [id], onUpdate: NoAction, map: "FK__SUBMODULE__modul__47DBAE45")
+}
+
+model SYSTEM {
+  id            Int             @id(map: "PK__SYSTEM__3213E83FCC7ACBDF") @default(autoincrement())
+  name          String          @db.VarChar(255)
+  description   String?         @db.NVarChar(255)
+  ERROR_LOG     ERROR_LOG[]
+  SYSTEM_MODULE SYSTEM_MODULE[]
+}
+
+model SYSTEM_MODULE {
+  system_id Int
+  module_id Int
+  MODULS    MODULS @relation(fields: [module_id], references: [id], onUpdate: NoAction, map: "FK__SYSTEM_MO__modul__44FF419A")
+  SYSTEM    SYSTEM @relation(fields: [system_id], references: [id], onUpdate: NoAction, map: "FK__SYSTEM_MO__syste__440B1D61")
+
+  @@id([system_id, module_id], map: "PK__SYSTEM_M__5DE72E1A0C19902E")
+}
+
+model USERS {
+  id             Int         @id(map: "PK__USERS__3213E83F6B33A37E") @default(autoincrement())
+  rol_id         Int
+  name           String      @db.VarChar(255)
+  lastname       String      @db.VarChar(255)
+  password       String      @db.VarChar(255)
+  email          String      @unique(map: "UQ__USERS__AB6E6164BD7C5087") @db.VarChar(255)
+  identification String      @unique(map: "UQ__USERS__AAA7C1F538082668") @db.VarChar(50)
+  ERROR_LOG      ERROR_LOG[]
+  ROL            ROL         @relation(fields: [rol_id], references: [id], onUpdate: NoAction, map: "FK__USERS__rol_id__4CA06362")
+}
