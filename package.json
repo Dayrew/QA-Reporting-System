@@ -3,9 +3,13 @@
   "version": "1.0.0",
   "description": "The main function of this project is to facilitate the creation of QA reports about the system.",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+ "scripts": {
+  "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+  "build": "tsc",
+  "start": "node dist/server.js",
+  "postinstall": "npx prisma generate",
+  "test": "echo \"Error: no test specified\" && exit 1"
+},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Dayrew/QA-Reporting-System.git"
@@ -25,6 +29,10 @@
     "prisma": "^7.3.0"
   },
   "devDependencies": {
-    "@types/node": "^25.2.2"
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.2.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.3"
   }
 }
