@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "description": "The main function of this project is to facilitate the creation of QA reports about the system.",
   "main": "index.js",
- "scripts": {
-  "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-  "build": "tsc",
-  "start": "node dist/server.js",
-  "postinstall": "npx prisma generate",
-  "test": "echo \"Error: no test specified\" && exit 1"
-},
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "postinstall": "npx prisma generate",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Dayrew/QA-Reporting-System.git"
@@ -22,15 +22,20 @@
   },
   "homepage": "https://github.com/Dayrew/QA-Reporting-System#readme",
   "dependencies": {
+    "@prisma/adapter-mssql": "^7.4.2",
     "@prisma/client": "^7.3.0",
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.6",
     "dotenv": "^17.2.4",
     "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
     "prisma": "^7.3.0"
   },
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.2.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.9.3"
