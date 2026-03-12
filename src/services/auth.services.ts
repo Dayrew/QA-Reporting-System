@@ -16,7 +16,8 @@ export const loginService = async (email: string, password: string) => {
 
   const token = generateToken({
     id: user.id,
-    email: user.email
+    email: user.email,
+    role: user.ROL.name
   });
 
   return {
